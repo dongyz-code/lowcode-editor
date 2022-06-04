@@ -1,5 +1,5 @@
 <template>
-  <component :is="props.tag || 'div'" :style="styleProps"> {{ props.text }}</component>
+  <component :is="props.tag || 'div'" :style="styleProps" @click="handleClick"> {{ props.text }}</component>
 </template>
 
 <script lang="ts">
@@ -7,18 +7,11 @@ export default {  name: 'l-text' }
 </script>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { pick } from 'lodash-es'
-const props = defineProps<{
-  text: string,
-  fontSize: string,
-  tag: string
-}>()
+import { textDefaultProps, transformToComponentProps } from '@/config/defaultProps'
+import useComponentCommon from '@/hooks/useComponentCommon'
 
-const styleProps = computed(() => pick(props, ['fontSize']))
-console.log('styleProps', styleProps)
-console.log('props', props)
-
+const props = defineProps(transformToComponentProps(textDefaultProps))
+const {styleProps, handleClick} = useComponentCommon(props, ['text', 'url', 'actionType'])
 
 </script>
 

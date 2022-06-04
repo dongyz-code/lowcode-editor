@@ -44,6 +44,14 @@ const componentsMap: any = {
 
   .canvas-wrapper {
     flex-grow: 1;
+    position: relative;
+  }
+  .canvas-content {
+    position: relative;
+    margin: 10px;
+    box-sizing: border-box;
+    height: 80vh;
+    border: 1px solid gray;
   }
 
   .component-props-wrapper {

@@ -13,7 +13,7 @@ export interface EditorProps {
 /** 测试数据--start */
 export const testComponentData = [
   {id: uuid(), name: 'l-text', props: { text: 'hello', fontSize: '14px' }},
-  {id: uuid(), name: 'l-text', props: { text: 'hello2', fontSize: '16px' }},
+  {id: uuid(), name: 'l-text', props: { text: 'hello2', fontSize: '16px', actionType: 'url', url: 'https://www.baidu.com' }},
   {id: uuid(), name: 'l-text', props: { text: 'hello3', fontSize: '12px' }},
 ]
 /** 测试数据--end */
