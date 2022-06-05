@@ -32,7 +32,7 @@ export const commonDefaultProps: CommonComponentProps = {
   url: '',
   // size
   height: '',
-  width: '373px',
+  width: '100%',
   paddingLeft: '0px',
   paddingRight: '0px',
   paddingTop: '0px',

@@ -4,7 +4,6 @@ import { TextComponentProps } from '@/config/defaultProps'
 import { winOpen } from '@/utils'
 
 const useComponentCommon = (props: Readonly<ExtractPropTypes<TextComponentProps>>, omits: string[]) => {
-  console.log(1)
   const styleProps = computed(() => omit(props, omits))
   const handleClick = () => {
     if (props.actionType === 'url' && props.url) {
