@@ -6,15 +6,26 @@
     <div class="canvas-wrapper">
       <h2 class="canvas-title">画布区域</h2>
       <div class="canvas-content">
-        <component
+        <EditWrapper
           v-for="component in components"
           :key="component.id"
-          :is="componentsMap[component.name] || 'div'"
-          v-bind="component.props"
-        />
+          :componentId="component.id"
+          :isActive="component.id === editorProps.activeComponent?.id"
+          @setActive="setActive"
+        >
+          <component
+            :is="componentsMap[component.name] || 'div'"
+            v-bind="component.props"
+          />
+        </EditWrapper>
       </div>
     </div>
-    <div class="component-props-wrapper">组件属性</div>
+    <div class="component-props-wrapper">
+      <h2 class="props-title">组件属性</h2>
+      <pre>
+        {{ editorProps.activeComponent }}
+      </pre>
+    </div>
   </div>
 </template>
 
@@ -22,11 +33,12 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
-import ComponentList from '@/components/ComponentList/index.vue'
-import LText from '@/components/LText/index.vue'
 import { useEditorProps } from '@/store/editor'
 import { defaultTextTemplates } from '@/config/defaultTemplates'
 import { TextComponentProps } from '@/config/defaultProps'
+import ComponentList from '@/components/ComponentList/index.vue'
+import LText from '@/components/LText/index.vue'
+import EditWrapper from '@/components/EditWrapper/index.vue'
 const editorProps = useEditorProps()
 const { components } = storeToRefs(editorProps)
 
@@ -42,6 +54,10 @@ const addComponentToCanvas = (component: TextComponentProps) => {
     props: component
   }
   editorProps.addComponents(componentData)
+}
+
+const setActive = (id: string) => {
+  editorProps.setActive(id)
 }
 
 </script>

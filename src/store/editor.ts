@@ -24,9 +24,18 @@ export const useEditorProps = defineStore('EditorProps', {
     components: testComponentData,
     currentElement: ''
   }),
+  getters: {
+    activeComponent(state) {
+      return state.components.find((component) => component.id === state.currentElement)
+    }
+  },
   actions: {
     addComponents(component: ComponentData) {
       this.$state.components.push(component)
+    },
+
+    setActive(id: string) {
+      this.$state.currentElement = id
     }
   }
 })
