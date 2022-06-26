@@ -48,9 +48,7 @@ export const useEditorProps = defineStore('EditorProps', {
   }),
   getters: {
     activeComponent(state) {
-      return state.components.find(
-        (component) => component.id === state.currentElement
-      )
+      return state.components.find((component) => component.id === state.currentElement)
     },
   },
   actions: {

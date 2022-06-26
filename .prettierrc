@@ -1,4 +1,5 @@
 {
+  "printWidth": 120,
   "jsxSingleQuote": true,
   "proseWrap": "preserve",
   "quoteProps": "consistent",

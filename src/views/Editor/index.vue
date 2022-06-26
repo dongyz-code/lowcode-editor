@@ -1,10 +1,7 @@
 <template>
   <div class="main-editor-wrapper">
     <div class="component-list-wrapper">
-      <ComponentList
-        :list="defaultTextTemplates"
-        @addComponentToCanvas="addComponentToCanvas"
-      />
+      <ComponentList :list="defaultTextTemplates" @addComponentToCanvas="addComponentToCanvas" />
     </div>
     <div class="canvas-wrapper">
       <h2 class="canvas-title">画布区域</h2>
@@ -16,10 +13,7 @@
           :isActive="component.id === editorProps.activeComponent?.id"
           @setActive="setActive"
         >
-          <component
-            :is="componentsMap[component.name] || 'div'"
-            v-bind="component.props"
-          />
+          <component :is="componentsMap[component.name] || 'div'" v-bind="component.props" />
         </EditWrapper>
       </div>
     </div>

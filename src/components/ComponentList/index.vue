@@ -1,12 +1,7 @@
 <template>
   <h3 class="component-list-title">组件列表</h3>
   <ul class="component-list-content">
-    <li
-      v-for="(item, index) in props.list"
-      :key="index"
-      class="component-item"
-      @click="handleClick(item)"
-    >
+    <li v-for="(item, index) in props.list" :key="index" class="component-item" @click="handleClick(item)">
       <LText v-bind="(item as TextComponentProps)" />
     </li>
   </ul>

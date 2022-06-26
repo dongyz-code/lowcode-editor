@@ -3,12 +3,7 @@
     <div v-for="(value, index) in finalProps" :key="index" class="prop-item">
       <span class="label">{{ value?.label }}</span>
       <div class="prop-content">
-        <component
-          v-if="value?.value"
-          :is="antMap[value?.component]"
-          v-bind="value.defaultProps"
-          :value="value?.value"
-        >
+        <component v-if="value?.value" :is="antMap[value?.component]" v-bind="value.defaultProps" :value="value?.value">
         </component>
       </div>
     </div>
