@@ -11,6 +11,5 @@ const antMap: antMap = {
   'a-input': Input,
   'a-input-number': InputNumber,
   'a-slider': Slider,
-
 }
 export default antMap

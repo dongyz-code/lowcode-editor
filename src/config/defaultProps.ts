@@ -2,28 +2,28 @@ import { mapValues } from 'lodash-es'
 
 export interface CommonComponentProps {
   // actions
-  actionType: string;
-  url: string;
+  actionType: string
+  url: string
   // size
-  height: string;
-  width: string;
-  paddingLeft: string;
-  paddingRight: string;
-  paddingTop: string;
-  paddingBottom: string;
+  height: string
+  width: string
+  paddingLeft: string
+  paddingRight: string
+  paddingTop: string
+  paddingBottom: string
   // border type
-  borderStyle: string;
-  borderColor: string;
-  borderWidth: string;
-  borderRadius: string;
+  borderStyle: string
+  borderColor: string
+  borderWidth: string
+  borderRadius: string
   // shadow and opacity
-  boxShadow: string;
-  opacity: string;
+  boxShadow: string
+  opacity: string
   // position and x,y
   // position?: string;
-  left: string;
-  top: string;
-  right: string;
+  left: string
+  top: string
+  right: string
 }
 
 export const commonDefaultProps: CommonComponentProps = {
@@ -49,21 +49,21 @@ export const commonDefaultProps: CommonComponentProps = {
   // position: 'absolute',
   left: '0',
   top: '0',
-  right: '0'
+  right: '0',
 }
 
 export interface TextComponentProps extends CommonComponentProps {
-  tag: string;
-  text: string;
-  fontSize: string;
-  fontFamily: string;
-  fontWeight: string;
-  fontStyle: string;
-  textDecoration: string;
-  lineHeight: string;
-  textAlign: string;
-  color: string;
-  backgroundColor: string;
+  tag: string
+  text: string
+  fontSize: string
+  fontFamily: string
+  fontWeight: string
+  fontStyle: string
+  textDecoration: string
+  lineHeight: string
+  textAlign: string
+  color: string
+  backgroundColor: string
 }
 
 export const textDefaultProps: TextComponentProps = {
@@ -79,14 +79,14 @@ export const textDefaultProps: TextComponentProps = {
   textAlign: 'left',
   color: '#000000',
   backgroundColor: '',
-  ...commonDefaultProps
+  ...commonDefaultProps,
 }
 
 export const transformToComponentProps = <T extends object>(props: T) => {
-  return mapValues(props, item => {
+  return mapValues(props, (item) => {
     return {
       type: (item as any).constructor,
-      default: item
+      default: item,
     }
   })
 }

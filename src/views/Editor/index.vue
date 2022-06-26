@@ -1,7 +1,10 @@
 <template>
   <div class="main-editor-wrapper">
     <div class="component-list-wrapper">
-      <ComponentList :list="defaultTextTemplates" @addComponentToCanvas="addComponentToCanvas" />
+      <ComponentList
+        :list="defaultTextTemplates"
+        @addComponentToCanvas="addComponentToCanvas"
+      />
     </div>
     <div class="canvas-wrapper">
       <h2 class="canvas-title">画布区域</h2>
@@ -27,8 +30,9 @@
   </div>
 </template>
 
-
-<script lang="ts"> export default { name: 'main-editor' } </script>
+<script lang="ts">
+export default { name: 'main-editor' }
+</script>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
@@ -39,7 +43,6 @@ import ComponentList from '@/components/ComponentList/index.vue'
 import LText from '@/components/LText/index.vue'
 import EditWrapper from '@/components/EditWrapper/index.vue'
 import PropsTable from '@/components/PropsTable/index.vue'
-
 
 const editorProps = useEditorProps()
 const { components } = storeToRefs(editorProps)
@@ -53,7 +56,7 @@ const addComponentToCanvas = (component: TextComponentProps) => {
   const componentData = {
     id: uuid(),
     name: 'l-text',
-    props: component
+    props: component,
   }
   editorProps.addComponents(componentData)
 }
@@ -61,7 +64,6 @@ const addComponentToCanvas = (component: TextComponentProps) => {
 const setActive = (id: string) => {
   editorProps.setActive(id)
 }
-
 </script>
 
 <style lang="less" scoped>
@@ -71,7 +73,7 @@ const setActive = (id: string) => {
     width: 300px;
     height: 100vh;
     flex-shrink: 0;
-    background-color: burlywood;
+    background-color: #fff;
   }
 
   .canvas-wrapper {
@@ -100,7 +102,7 @@ const setActive = (id: string) => {
     flex-shrink: 0;
     height: 100vh;
     padding: 5px;
-    background-color: purple;
+    background-color: #fff;
   }
 }
 </style>

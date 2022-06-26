@@ -2,12 +2,12 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   devServer: {
     host: '0.0.0.0',
-    port: '8080'
+    port: '8080',
   },
   transpileDependencies: true,
   configureWebpack: {},
   chainWebpack: (config) => {
-    config.resolve.extensions.clear().merge(['.ts', '.js', '.json', '.vue',])
+    config.resolve.extensions.clear().merge(['.ts', '.js', '.json', '.vue'])
   },
   css: {
     loaderOptions: {
@@ -15,7 +15,7 @@ module.exports = defineConfig({
         lessOptions: {
           javascriptEnabled: true,
         },
-      }
-    }
-  }
+      },
+    },
+  },
 })

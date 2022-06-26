@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-wrapper" :class="{active: props.isActive}">
+  <div class="edit-wrapper" :class="{ active: props.isActive }">
     <div @click="handleClickWrapper" class="mask"></div>
     <slot></slot>
   </div>
@@ -14,14 +14,13 @@ export default {
 const props = defineProps({
   componentId: {
     type: String,
-    require: true
+    require: true,
   },
   isActive: {
     type: Boolean,
-    defaule: false
-  }
+    defaule: false,
+  },
 })
-
 
 const emit = defineEmits(['setActive'])
 const handleClickWrapper = (e: MouseEvent) => {

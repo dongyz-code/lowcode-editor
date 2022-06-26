@@ -3,12 +3,9 @@
 </template>
 
 <script lang="ts">
-  export default { name: 'App' }
+export default { name: 'App' }
 </script>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>

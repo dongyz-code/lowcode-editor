@@ -1,17 +1,14 @@
 <template>
   <div class="propss-table">
-    <div
-      v-for="(value, index) in finalProps"
-      :key="index"
-      class="prop-item"
-    >
-      <span class="label">{{value?.label}}</span>
+    <div v-for="(value, index) in finalProps" :key="index" class="prop-item">
+      <span class="label">{{ value?.label }}</span>
       <div class="prop-content">
         <component
           v-if="value?.value"
-          :is='antMap[value?.component]'
+          :is="antMap[value?.component]"
           v-bind="value.defaultProps"
-          :value="value?.value">
+          :value="value?.value"
+        >
         </component>
       </div>
     </div>
@@ -30,24 +27,25 @@ import { mapPropsToForms, PropsToForms } from '@/config/propsToForm'
 import { TextComponentProps } from '@/config/defaultProps'
 import antMap from '@/plugins/antdMap'
 
-
 const props = defineProps({
-  props: Object as PropType<Partial<TextComponentProps>>
+  props: Object as PropType<Partial<TextComponentProps>>,
 })
 
 const finalProps = computed(() => {
-  return reduce(props.props, (result, value, key) => {
-    const newkey = key as keyof TextComponentProps
-    const item = mapPropsToForms[newkey]
-    if (item) {
-      item.value = value
-      result[newkey] = item
-    }
-    return result
-  }, {} as PropsToForms)
+  return reduce(
+    props.props,
+    (result, value, key) => {
+      const newkey = key as keyof TextComponentProps
+      const item = mapPropsToForms[newkey]
+      if (item) {
+        item.value = value
+        result[newkey] = item
+      }
+      return result
+    },
+    {} as PropsToForms
+  )
 })
-
-
 </script>
 
 <style lang="less" scoped>
