@@ -1,9 +1,6 @@
 <template>
-  <div
-    class="edit-wrapper"
-    :class="{active: props.isActive}"
-    @click="handleClickWrapper"
-  >
+  <div class="edit-wrapper" :class="{active: props.isActive}">
+    <div @click="handleClickWrapper" class="mask"></div>
     <slot></slot>
   </div>
 </template>
@@ -27,14 +24,16 @@ const props = defineProps({
 
 
 const emit = defineEmits(['setActive'])
-const handleClickWrapper = () => {
+const handleClickWrapper = (e: MouseEvent) => {
   emit('setActive', props.componentId)
+  e.stopPropagation()
+  e.preventDefault()
 }
 </script>
 
 <style lang="less" scoped>
 .edit-wrapper {
-  cursor: pointer;
+  position: relative;
   &:not(.active) {
     &:hover {
       border: 1px pink dashed;
@@ -42,6 +41,15 @@ const handleClickWrapper = () => {
   }
   &.active {
     border: 1px rgb(59, 82, 235) solid;
+  }
+
+  .mask {
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
 }
 </style>

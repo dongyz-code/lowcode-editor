@@ -22,12 +22,11 @@
     </div>
     <div class="component-props-wrapper">
       <h2 class="props-title">组件属性</h2>
-      <pre>
-        {{ editorProps.activeComponent }}
-      </pre>
+      <PropsTable :props="editorProps.activeComponent?.props" />
     </div>
   </div>
 </template>
+
 
 <script lang="ts"> export default { name: 'main-editor' } </script>
 <script lang="ts" setup>
@@ -39,6 +38,9 @@ import { TextComponentProps } from '@/config/defaultProps'
 import ComponentList from '@/components/ComponentList/index.vue'
 import LText from '@/components/LText/index.vue'
 import EditWrapper from '@/components/EditWrapper/index.vue'
+import PropsTable from '@/components/PropsTable/index.vue'
+
+
 const editorProps = useEditorProps()
 const { components } = storeToRefs(editorProps)
 
@@ -65,7 +67,6 @@ const setActive = (id: string) => {
 <style lang="less" scoped>
 .main-editor-wrapper {
   display: flex;
-  width: 100vw;
   .component-list-wrapper {
     width: 300px;
     height: 100vh;
@@ -98,6 +99,7 @@ const setActive = (id: string) => {
     width: 300px;
     flex-shrink: 0;
     height: 100vh;
+    padding: 5px;
     background-color: purple;
   }
 }
