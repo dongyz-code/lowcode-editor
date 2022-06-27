@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-export default { name: 'l-text'}
+export default { name: 'l-text' }
 </script>
 
 <script lang="ts" setup>
@@ -11,10 +11,7 @@ import { textDefaultProps, transformToComponentProps } from '@/config/defaultPro
 import useComponentCommon from '@/hooks/useComponentCommon'
 
 const props = defineProps(transformToComponentProps(textDefaultProps))
-const {styleProps, handleClick} = useComponentCommon(props, ['text', 'url', 'actionType', 'tag'])
-
+const { styleProps, handleClick } = useComponentCommon(props, ['text', 'url', 'actionType', 'tag'])
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

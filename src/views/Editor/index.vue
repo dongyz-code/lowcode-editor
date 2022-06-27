@@ -13,23 +13,20 @@
           :isActive="component.id === editorProps.activeComponent?.id"
           @setActive="setActive"
         >
-          <component
-            :is="componentsMap[component.name] || 'div'"
-            v-bind="component.props"
-          />
+          <component :is="componentsMap[component.name] || 'div'" v-bind="component.props" />
         </EditWrapper>
       </div>
     </div>
     <div class="component-props-wrapper">
       <h2 class="props-title">组件属性</h2>
-      <pre>
-        {{ editorProps.activeComponent }}
-      </pre>
+      <PropsTable :props="editorProps.activeComponent?.props" />
     </div>
   </div>
 </template>
 
-<script lang="ts"> export default { name: 'main-editor' } </script>
+<script lang="ts">
+export default { name: 'main-editor' }
+</script>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
@@ -39,6 +36,8 @@ import { TextComponentProps } from '@/config/defaultProps'
 import ComponentList from '@/components/ComponentList/index.vue'
 import LText from '@/components/LText/index.vue'
 import EditWrapper from '@/components/EditWrapper/index.vue'
+import PropsTable from '@/components/PropsTable/index.vue'
+
 const editorProps = useEditorProps()
 const { components } = storeToRefs(editorProps)
 
@@ -51,7 +50,7 @@ const addComponentToCanvas = (component: TextComponentProps) => {
   const componentData = {
     id: uuid(),
     name: 'l-text',
-    props: component
+    props: component,
   }
   editorProps.addComponents(componentData)
 }
@@ -59,18 +58,16 @@ const addComponentToCanvas = (component: TextComponentProps) => {
 const setActive = (id: string) => {
   editorProps.setActive(id)
 }
-
 </script>
 
 <style lang="less" scoped>
 .main-editor-wrapper {
   display: flex;
-  width: 100vw;
   .component-list-wrapper {
     width: 300px;
     height: 100vh;
     flex-shrink: 0;
-    background-color: burlywood;
+    background-color: #fff;
   }
 
   .canvas-wrapper {
@@ -98,7 +95,8 @@ const setActive = (id: string) => {
     width: 300px;
     flex-shrink: 0;
     height: 100vh;
-    background-color: purple;
+    padding: 5px;
+    background-color: #fff;
   }
 }
 </style>

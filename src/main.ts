@@ -5,7 +5,4 @@ import App from './App.vue'
 import '@/styles/reset.less'
 const app = createApp(App)
 
-app
-  .use(router)
-  .use(createPinia())
-  .mount('#app')
+app.use(router).use(createPinia()).mount('#app')

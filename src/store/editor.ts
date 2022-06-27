@@ -12,22 +12,44 @@ export interface EditorProps {
 }
 
 /** 测试数据--start */
-export const testComponentData: ComponentData[]  = [
-  {id: uuid(), name: 'l-text', props: { text: 'hello', fontSize: '14px', color: 'red' }},
-  {id: uuid(), name: 'l-text', props: { text: 'hello2', fontSize: '16px', actionType: 'url', url: 'https://www.baidu.com' }},
-  {id: uuid(), name: 'l-text', props: { text: 'hello3', fontSize: '12px' }},
+export const testComponentData: ComponentData[] = [
+  {
+    id: uuid(),
+    name: 'l-text',
+    props: {
+      text: 'hello',
+      fontSize: '14px',
+      lineHeight: '14px',
+      color: 'red',
+    },
+  },
+  {
+    id: uuid(),
+    name: 'l-text',
+    props: {
+      text: 'hello2',
+      fontSize: '16px',
+      actionType: 'url',
+      url: 'https://www.baidu.com',
+    },
+  },
+  {
+    id: uuid(),
+    name: 'l-text',
+    props: { text: 'hello3', fontSize: '12px', lineHeight: '1', textAlign: 'left', fontFamily: '"SimSun","STSong"' },
+  },
 ]
 /** 测试数据--end */
 
 export const useEditorProps = defineStore('EditorProps', {
   state: (): EditorProps => ({
     components: testComponentData,
-    currentElement: ''
+    currentElement: '',
   }),
   getters: {
     activeComponent(state) {
       return state.components.find((component) => component.id === state.currentElement)
-    }
+    },
   },
   actions: {
     addComponents(component: ComponentData) {
@@ -36,6 +58,6 @@ export const useEditorProps = defineStore('EditorProps', {
 
     setActive(id: string) {
       this.$state.currentElement = id
-    }
-  }
+    },
+  },
 })
