@@ -4,6 +4,16 @@
       <span class="label">{{ value?.label }}</span>
       <div class="prop-content">
         <component v-if="value?.value" :is="antMap[value?.component]" v-bind="value.defaultProps" :value="value?.value">
+          <template v-if="value.options && value.subComponent">
+            <component
+              v-for="(option, subIndex) in value.options"
+              :key="`${index}_${subIndex}`"
+              :is="antMap[value.subComponent]"
+              :value="option.value"
+            >
+              {{ option.text }}
+            </component>
+          </template>
         </component>
       </div>
     </div>
@@ -33,7 +43,7 @@ const finalProps = computed(() => {
       const newkey = key as keyof TextComponentProps
       const item = mapPropsToForms[newkey]
       if (item) {
-        item.value = value
+        item.value = item.initaTransform ? item.initaTransform(value) : value
         result[newkey] = item
       }
       return result

@@ -7,7 +7,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/editor',
-    component: import('@/views/Editor/index.vue'),
+    component: () => import('@/views/Editor/index.vue'),
   },
 ]
 

@@ -36,7 +36,7 @@ export const testComponentData: ComponentData[] = [
   {
     id: uuid(),
     name: 'l-text',
-    props: { text: 'hello3', fontSize: '12px', lineHeight: '1' },
+    props: { text: 'hello3', fontSize: '12px', lineHeight: '1', textAlign: 'left', fontFamily: '"SimSun","STSong"' },
   },
 ]
 /** 测试数据--end */
