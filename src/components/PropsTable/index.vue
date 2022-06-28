@@ -3,7 +3,13 @@
     <div v-for="(value, index) in finalProps" :key="index" class="prop-item">
       <span class="label">{{ value?.label }}</span>
       <div class="prop-content">
-        <component v-if="value?.value" :is="antMap[value?.component]" v-bind="value.defaultProps" :value="value?.value">
+        <component
+          v-if="value?.value"
+          :is="antMap[value.component]"
+          v-bind="value.defaultProps"
+          v-on="value.events"
+          :[value.valueProps]="value.value"
+        >
           <template v-if="value.options && value.subComponent">
             <component
               v-for="(option, subIndex) in value.options"
@@ -28,13 +34,22 @@ export default {
 <script setup lang="ts">
 import { computed, PropType } from 'vue'
 import { reduce } from 'lodash-es'
-import { mapPropsToForms, PropsToForms } from '@/config/propsToForm'
+import { mapPropsToForms, PropsToForm } from '@/config/propsToForm'
 import { TextComponentProps } from '@/config/defaultProps'
 import antMap from '@/plugins/antdMap'
+
+interface FormProps extends PropsToForm {
+  valueProps: string
+  value: string
+  eventName: string
+  events: { [key: string]: (e: any) => void }
+}
 
 const props = defineProps({
   props: Object as PropType<Partial<TextComponentProps>>,
 })
+
+const emits = defineEmits(['change'])
 
 const finalProps = computed(() => {
   return reduce(
@@ -42,13 +57,25 @@ const finalProps = computed(() => {
     (result, value, key) => {
       const newkey = key as keyof TextComponentProps
       const item = mapPropsToForms[newkey]
-      if (item) {
-        item.value = item.initaTransform ? item.initaTransform(value) : value
-        result[newkey] = item
+      if (!item) return result
+
+      const { valueProps = 'value', eventName = 'change', initaTransform, afterTransform } = item
+
+      const handleChange = (e: Event) => {
+        emits('change', { key, value: afterTransform ? afterTransform(e) : e })
       }
+
+      const newItem = {
+        ...item,
+        value: initaTransform ? initaTransform(value) : value,
+        eventName,
+        events: { [eventName]: handleChange },
+        valueProps,
+      }
+      result[newkey] = newItem
       return result
     },
-    {} as PropsToForms
+    {} as { [P in keyof TextComponentProps]: FormProps }
   )
 })
 </script>

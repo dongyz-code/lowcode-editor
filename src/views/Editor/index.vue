@@ -19,7 +19,7 @@
     </div>
     <div class="component-props-wrapper">
       <h2 class="props-title">组件属性</h2>
-      <PropsTable :props="editorProps.activeComponent?.props" />
+      <PropsTable :props="editorProps.activeComponent?.props" @change="changeProps" />
     </div>
   </div>
 </template>
@@ -57,6 +57,11 @@ const addComponentToCanvas = (component: TextComponentProps) => {
 
 const setActive = (id: string) => {
   editorProps.setActive(id)
+}
+
+const changeProps = (e: any) => {
+  console.log(e)
+  editorProps.updateProps(e)
 }
 </script>
 

@@ -11,6 +11,11 @@ export interface EditorProps {
   currentElement: string
 }
 
+type updateComponentProps = {
+  key: keyof TextComponentProps
+  value: string
+}
+
 /** 测试数据--start */
 export const testComponentData: ComponentData[] = [
   {
@@ -58,6 +63,12 @@ export const useEditorProps = defineStore('EditorProps', {
 
     setActive(id: string) {
       this.$state.currentElement = id
+    },
+
+    updateProps({ key, value }: updateComponentProps) {
+      const activeComponent = this.$state.components.find((component) => component.id === this.$state.currentElement)
+      if (!activeComponent) return
+      activeComponent.props[key] = value
     },
   },
 })
