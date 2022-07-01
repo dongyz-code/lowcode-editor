@@ -24,8 +24,9 @@ export const testComponentData: ComponentData[] = [
     props: {
       text: 'hello',
       fontSize: '14px',
-      lineHeight: '14px',
+      lineHeight: '2',
       color: 'red',
+      opacity: '0.5',
     },
   },
   {
@@ -59,6 +60,11 @@ export const useEditorProps = defineStore('EditorProps', {
   actions: {
     addComponents(component: ComponentData) {
       this.$state.components.push(component)
+    },
+
+    delComponent(componentId: string) {
+      this.$state.components = this.$state.components.filter((component) => component.id !== componentId)
+      if (componentId === this.currentElement) this.currentElement = ''
     },
 
     setActive(id: string) {

@@ -1,6 +1,10 @@
 <template>
   <div class="edit-wrapper" :class="{ active: props.isActive }">
-    <div @click="handleClickWrapper" class="mask"></div>
+    <div @click="handleClickWrapper" class="mask">
+      <div v-if="props.isActive" class="action">
+        <div class="del" @click="handleDel"><DeleteOutlined style="color: red" /></div>
+      </div>
+    </div>
     <slot></slot>
   </div>
 </template>
@@ -11,6 +15,7 @@ export default {
 }
 </script>
 <script lang="ts" setup>
+import { DeleteOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
   componentId: {
     type: String,
@@ -22,11 +27,14 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['setActive'])
+const emit = defineEmits(['setActive', 'delComponent'])
 const handleClickWrapper = (e: MouseEvent) => {
   emit('setActive', props.componentId)
   e.stopPropagation()
   e.preventDefault()
+}
+const handleDel = () => {
+  emit('delComponent', props.componentId)
 }
 </script>
 
@@ -49,6 +57,12 @@ const handleClickWrapper = (e: MouseEvent) => {
     right: 0;
     top: 0;
     bottom: 0;
+    z-index: 10;
+    .action {
+      height: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 }
 </style>

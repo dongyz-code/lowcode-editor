@@ -15,6 +15,18 @@ export type PropsToForms = {
   [P in keyof TextComponentProps]?: PropsToForm
 }
 
+const fontFamilys = [
+  { label: '宋体', value: '"SimSun","STSong"' },
+  { label: '黑体', value: '"SimHei","STHeiti"' },
+  { label: '楷体', value: '"KaiTi","STKaiti"' },
+  { label: '仿宋', value: '"FangSong","STFangsong"' },
+]
+
+const fontFamilyOptions = fontFamilys.map((fontFamily) => ({
+  label: <span style={{ fontFamily: fontFamily.value }}>{fontFamily.label}</span>,
+  value: fontFamily.value,
+}))
+
 export const mapPropsToForms: PropsToForms = {
   text: {
     label: '文本',
@@ -53,12 +65,18 @@ export const mapPropsToForms: PropsToForms = {
     label: '字体',
     component: 'a-select',
     defaultProps: {
-      options: [
-        { label: '宋体', value: '"SimSun","STSong"' },
-        { label: '黑体', value: '"SimHei","STHeiti"' },
-        { label: '楷体', value: '"KaiTi","STKaiti"' },
-        { label: '仿宋', value: '"FangSong","STFangsong"' },
-      ],
+      options: fontFamilyOptions,
+    },
+  },
+  opacity: {
+    label: '透明度',
+    component: 'a-slider', // 0-1 -> 100 - 0
+    initaTransform: (value: string) => 100 - Number(value) * 100,
+    afterTransform: (value: number) => (100 - value) / 100,
+    defaultProps: {
+      min: 0,
+      max: 100,
+      step: 1,
     },
   },
 }

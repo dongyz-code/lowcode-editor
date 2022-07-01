@@ -4,7 +4,7 @@
       <span class="label">{{ value?.label }}</span>
       <div class="prop-content">
         <component
-          v-if="value?.value"
+          v-if="value?.value || Number(value?.value) === 0"
           :is="antMap[value.component]"
           v-bind="value.defaultProps"
           v-on="value.events"
@@ -17,7 +17,7 @@
               :is="antMap[value.subComponent]"
               :value="option.value"
             >
-              {{ option.text }}
+              <RenderVnode :vNode="option.text"></RenderVnode>
             </component>
           </template>
         </component>
@@ -36,6 +36,7 @@ import { computed, PropType } from 'vue'
 import { reduce } from 'lodash-es'
 import { mapPropsToForms, PropsToForm } from '@/config/propsToForm'
 import { TextComponentProps } from '@/config/defaultProps'
+import RenderVnode from '../RenderVnode'
 import antMap from '@/plugins/antdMap'
 
 interface FormProps extends PropsToForm {

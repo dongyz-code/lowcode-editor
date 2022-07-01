@@ -7,7 +7,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: {},
   chainWebpack: (config) => {
-    config.resolve.extensions.clear().merge(['.ts', '.js', '.json', '.vue'])
+    config.resolve.extensions.clear().merge(['.ts', '.js', '.json', '.vue', '.tsx'])
   },
   css: {
     loaderOptions: {

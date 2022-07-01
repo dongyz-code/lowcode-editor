@@ -12,6 +12,7 @@
           :componentId="component.id"
           :isActive="component.id === editorProps.activeComponent?.id"
           @setActive="setActive"
+          @delComponent="delComponent"
         >
           <component :is="componentsMap[component.name] || 'div'" v-bind="component.props" />
         </EditWrapper>
@@ -60,8 +61,11 @@ const setActive = (id: string) => {
 }
 
 const changeProps = (e: any) => {
-  console.log(e)
   editorProps.updateProps(e)
+}
+
+const delComponent = (id: string) => {
+  editorProps.delComponent(id)
 }
 </script>
 
