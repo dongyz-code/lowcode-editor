@@ -79,4 +79,8 @@ export const mapPropsToForms: PropsToForms = {
       step: 1,
     },
   },
+  color: {
+    component: 'color-picker',
+    label: '颜色',
+  },
 }

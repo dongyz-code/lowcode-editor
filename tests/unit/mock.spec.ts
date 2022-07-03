@@ -1,21 +1,22 @@
 import axios from 'axios'
 import { getUserName } from '../utils/user'
 jest.mock('axios')
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-axios.get.mockImplementation(() => {
+//  解决axios上面没有mockImplementation类型的问题
+const mockAxios = axios as jest.Mocked<typeof axios>
+
+mockAxios.get.mockImplementation(() => {
   return Promise.resolve({ data: { username: '666' } })
 })
-beforeEach(() => {
-  console.log('beforeEach 外层')
-})
+// beforeEach(() => {
+//   console.log('beforeEach 外层')
+// })
 function mockTest(shouldCall: boolean, cb: (val: number) => any) {
   if (shouldCall) cb(56)
 }
 describe('mock', () => {
-  beforeEach(() => {
-    console.log('beforeEach 内层')
-  })
+  // beforeEach(() => {
+  //   console.log('beforeEach 内层')
+  // })
 
   it('test mock base', () => {
     const cb = jest.fn()

@@ -5,7 +5,7 @@
       <div class="prop-content">
         <component
           v-if="value?.value || Number(value?.value) === 0"
-          :is="antMap[value.component]"
+          :is="componentsMap[value.component]"
           v-bind="value.defaultProps"
           v-on="value.events"
           :[value.valueProps]="value.value"
@@ -14,7 +14,7 @@
             <component
               v-for="(option, subIndex) in value.options"
               :key="`${index}_${subIndex}`"
-              :is="antMap[value.subComponent]"
+              :is="componentsMap[value.subComponent]"
               :value="option.value"
             >
               <RenderVnode :vNode="option.text"></RenderVnode>
@@ -37,7 +37,7 @@ import { reduce } from 'lodash-es'
 import { mapPropsToForms, PropsToForm } from '@/config/propsToForm'
 import { TextComponentProps } from '@/config/defaultProps'
 import RenderVnode from '../RenderVnode'
-import antMap from '@/plugins/antdMap'
+import componentsMap from '@/plugins/componentsMap'
 
 interface FormProps extends PropsToForm {
   valueProps: string
@@ -63,6 +63,7 @@ const finalProps = computed(() => {
       const { valueProps = 'value', eventName = 'change', initaTransform, afterTransform } = item
 
       const handleChange = (e: Event) => {
+        console.log(e)
         emits('change', { key, value: afterTransform ? afterTransform(e) : e })
       }
 

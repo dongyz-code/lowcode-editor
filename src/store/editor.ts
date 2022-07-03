@@ -25,7 +25,7 @@ export const testComponentData: ComponentData[] = [
       text: 'hello',
       fontSize: '14px',
       lineHeight: '2',
-      color: 'red',
+      color: '#f5222d',
       opacity: '0.5',
     },
   },
