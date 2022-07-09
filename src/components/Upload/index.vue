@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input ref="inputRef" :accept="props.accept" @change="onChange" class="upload-input" type="file" />
+    <input ref="inputRef" :accept="props.accept" @change="onUploadInputChange" class="upload-input" type="file" />
     <div class="upload-wrap">
       <!-- picture -->
       <template v-if="props.listType === 'picture'">
@@ -13,7 +13,7 @@
       </template>
 
       <!-- 上传按钮 -->
-      <div v-if="!isHideUploadBtn" @click="handleClick" class="upload-btn-wrap">
+      <div v-if="!isHideUploadBtn" v-on="triggerEvent" class="upload-btn-wrap">
         <slot>
           <button class="upload-btn">
             <span class="upload-text">点击上传</span>
@@ -43,7 +43,7 @@ import { v4 as uuid } from 'uuid'
 import { Image } from 'ant-design-vue'
 import { DeleteOutlined } from '@ant-design/icons-vue'
 import { isEmpty, isObject } from 'lodash-es'
-import { fileToBase64, getType } from '@/utils'
+import { fileToBase64 } from '@/utils'
 
 type res = {
   code: string
@@ -64,6 +64,12 @@ interface UploadFile {
   response?: any
   url?: string
 }
+interface TriggerEvent {
+  click: () => void
+  dragover?: (e: DragEvent) => void
+  dragleave?: (e: DragEvent) => void
+  drop?: (e: DragEvent) => void
+}
 
 const props = defineProps({
   action: String,
@@ -72,6 +78,7 @@ const props = defineProps({
   beforeUpload: Function as PropType<BeforeUpload>,
   onSuccess: Function as PropType<OnSuccess>,
   limit: Number,
+  drop: Boolean,
   listType: {
     type: String as PropType<ListType>,
     default: 'text',
@@ -84,6 +91,7 @@ const props = defineProps({
 })
 
 const inputRef = ref<HTMLButtonElement | null>(null)
+const isDragOver = ref<boolean>(false)
 const uploadedFiles = ref<UploadFile[]>([])
 
 const handleClick = () => {
@@ -135,11 +143,8 @@ const postSingleFiles = async (uplaodedFile: File) => {
   }
 }
 
-const onChange = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  const files = target.files
+const uploadFiles = (files: FileList | null) => {
   if (!files) return
-
   const file = files[0]
   if (props.beforeUpload) {
     const res = props.beforeUpload(file)
@@ -163,6 +168,12 @@ const onChange = (e: Event) => {
   }
 }
 
+const onUploadInputChange = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  const files = target.files
+  uploadFiles(files)
+}
+
 // const isUploading = computed(() => uploadedFiles.value.some((file) => file.status === 'loading'))
 const isHideUploadBtn = computed<boolean>(() => {
   if (typeof props.limit === 'number') {
@@ -171,6 +182,34 @@ const isHideUploadBtn = computed<boolean>(() => {
     return false
   }
 })
+
+const onDragChange = (e: DragEvent, over: boolean) => {
+  e.preventDefault()
+  isDragOver.value = over
+}
+
+const handleDrop = (e: DragEvent) => {
+  e.preventDefault()
+  isDragOver.value = false
+  if (!e.dataTransfer) return
+
+  const files = e.dataTransfer.files
+  uploadFiles(files)
+}
+
+// 拖拽上传
+let triggerEvent: TriggerEvent = {
+  click: handleClick,
+}
+
+if (props.drop) {
+  triggerEvent = {
+    ...triggerEvent,
+    dragover: (e: DragEvent) => onDragChange(e, true),
+    dragleave: (e: DragEvent) => onDragChange(e, false),
+    drop: handleDrop,
+  }
+}
 </script>
 
 <style lang="less" scoped>

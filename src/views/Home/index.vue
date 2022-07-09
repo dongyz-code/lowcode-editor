@@ -1,6 +1,12 @@
 <template>
   <Card title="文件上传" style="width: 500px">
-    <Uplode action="/api/upload/avatar" list-type="picture" :before-upload="beforeUpload" :data="{ a: '456' }">
+    <Uplode
+      action="/api/upload/avatar"
+      :drop="true"
+      list-type="picture"
+      :before-upload="beforeUpload"
+      :data="{ a: '456' }"
+    >
       <div class="upload-btn">
         <PlusOutlined class="icon" />
         <div>Upload</div>
