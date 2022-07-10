@@ -15,7 +15,7 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
-    'no-explicit-any': 'off',
+    '@typescript-eslint/no-explicit-any': ['off'],
   },
   globals: {
     defineProps: 'readonly',

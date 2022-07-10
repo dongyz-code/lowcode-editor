@@ -52,8 +52,9 @@ type res = {
 
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
 type ListType = 'text' | 'picture'
-type BeforeUpload = (file: File) => boolean | Promise<File>
+type BeforeUpload = (uploddFile: UploadFile) => boolean | Promise<UploadFile>
 type OnSuccess = (res: any, file: File, fileList: UploadFile[]) => void
+type HttpRequest = (option: RequestOption) => void
 interface UploadFile {
   uid: string
   size: number
@@ -70,20 +71,37 @@ interface TriggerEvent {
   dragleave?: (e: DragEvent) => void
   drop?: (e: DragEvent) => void
 }
+interface RequestOption {
+  action?: string
+  name: string
+  Headers: { [key: string]: string }
+  data?: { [key: string]: string }
+  onProgress: (e: any) => void
+  file: File
+}
 
 const props = defineProps({
   action: String,
-  name: String,
+  name: {
+    type: String,
+    require: true,
+  },
   accept: String,
   beforeUpload: Function as PropType<BeforeUpload>,
   onSuccess: Function as PropType<OnSuccess>,
   limit: Number,
   drop: Boolean,
+  data: Object as PropType<{ [key: string]: string }>, // 上传时额外的参数
+  httpRequest: Function as PropType<HttpRequest>,
+  autoUpload: {
+    // 是否自动上传文件
+    type: Boolean,
+    default: true,
+  },
   listType: {
     type: String as PropType<ListType>,
     default: 'text',
   },
-  data: Object as PropType<{ [key: string]: string }>, //额外的参数
   headers: {
     type: Object as PropType<{ [key: string]: string }>,
     default: () => ({}),
@@ -94,87 +112,122 @@ const inputRef = ref<HTMLButtonElement | null>(null)
 const isDragOver = ref<boolean>(false)
 const uploadedFiles = ref<UploadFile[]>([])
 
-const handleClick = () => {
-  inputRef?.value?.click()
+const onUploadProgress = (e: any, uploadFile: UploadFile) => {
+  const progress = Math.floor((e.loaded / e.total) * 100)
+  uploadFile.percent = progress
 }
 
-const postSingleFiles = async (uplaodedFile: File) => {
-  if (!props.action) return
-  const base64Url = await fileToBase64(uplaodedFile)
-
-  const fileObj = reactive<UploadFile>({
-    uid: uuid(),
-    size: uplaodedFile.size,
-    name: uplaodedFile.name,
-    status: 'loading',
-    raw: uplaodedFile,
-    url: base64Url,
-  })
-  uploadedFiles.value.push(fileObj)
+const defaultPostFiles = (option: RequestOption) => {
+  if (!option.action) return
 
   const formData = new FormData()
-  formData.append('avatar', uplaodedFile)
+  formData.append(option.name, option.file)
 
   // 合并其他参数
-  if (!isEmpty(props.data) && isObject(props.data)) {
-    Object.keys(props.data).forEach((param) => {
-      const data = props.data as { [key: string]: string }
+  const data = option.data
+  if (data && !isEmpty(data) && isObject(data)) {
+    Object.keys(data).forEach((param) => {
       formData.append(param, data[param])
     })
   }
 
+  return axios.post<res>(option.action, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      ...option.Headers,
+    },
+    onUploadProgress: option.onProgress,
+  })
+}
+
+const beforeUploadCheck = async (uploadFile: UploadFile): Promise<UploadFile | undefined> => {
+  if (!props.beforeUpload) {
+    return uploadFile
+  }
+
   try {
-    const res = await axios.post<res>(props.action, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        ...props.headers,
-      },
-      onUploadProgress(e) {
-        const progress = Math.floor((e.loaded / e.total) * 100)
-        fileObj.percent = progress
-      },
-    })
-    fileObj.response = res.data
-    fileObj.status = 'success'
-  } catch (e) {
-    fileObj.status = 'error'
-  } finally {
-    if (inputRef.value) inputRef.value.value = ''
-  }
-}
-
-const uploadFiles = (files: FileList | null) => {
-  if (!files) return
-  const file = files[0]
-  if (props.beforeUpload) {
-    const res = props.beforeUpload(file)
-    if (typeof res === 'boolean') {
-      res && postSingleFiles(file)
-    } else if (res instanceof Promise) {
-      res
-        .then((transformFile) => {
-          if (transformFile instanceof File) {
-            postSingleFiles(transformFile)
-          } else {
-            throw new Error('beforeUpload Promise should return File object')
-          }
-        })
-        .catch((e) => {
-          console.error(e)
-        })
+    const res = props.beforeUpload(uploadFile)
+    if (res instanceof Promise) {
+      const transformFile = await res
+      if (transformFile.raw instanceof File) {
+        return transformFile
+      } else {
+        throw new Error('beforeUpload Promise should return File object')
+      }
+    } else if (typeof res === 'boolean') {
+      return uploadFile
+    } else {
+      return
     }
-  } else {
-    postSingleFiles(file)
+  } catch (e) {
+    let err = e as string
+    throw new Error(err)
   }
 }
 
-const onUploadInputChange = (e: Event) => {
+const addToFilesList = async (uploadFile: UploadFile) => {
+  const base64Url = await fileToBase64(uploadFile.raw)
+  uploadFile.url = base64Url
+  uploadedFiles.value.push(uploadFile)
+}
+
+const handleUploadFiles = () => {
+  const readyFiles = uploadedFiles.value.filter((uploadFile) => uploadFile.status === 'ready')
+  const postFileMethods = props.httpRequest || defaultPostFiles
+  readyFiles.forEach(async (uploadFile) => {
+    uploadFile.status = 'loading'
+    try {
+      const requestOption: RequestOption = {
+        action: props.action,
+        name: props.name || '',
+        Headers: props.headers,
+        data: props.data,
+        onProgress: (e: any) => onUploadProgress(e, uploadFile),
+        file: uploadFile.raw,
+      }
+
+      const res = await postFileMethods(requestOption)
+      uploadFile.status = 'success'
+      uploadFile.response = res
+    } catch (e) {
+      uploadFile.status = 'error'
+    } finally {
+      if (inputRef.value) inputRef.value.value = ''
+    }
+  })
+}
+
+const handleClick = () => {
+  inputRef?.value?.click()
+}
+
+const onUploadInputChange = async (e: Event) => {
   const target = e.target as HTMLInputElement
   const files = target.files
-  uploadFiles(files)
+
+  if (!files) return
+
+  // 构建UploadFile对象
+  const file = files[0]
+  const uploadFile = reactive<UploadFile>({
+    uid: uuid(),
+    size: file.size,
+    name: file.name,
+    status: 'ready',
+    raw: file,
+  })
+
+  try {
+    const transformFile = await beforeUploadCheck(uploadFile) // 检查文件
+    if (!transformFile) return
+    await addToFilesList(transformFile)
+    props.autoUpload && handleUploadFiles()
+  } catch (e) {
+    uploadFile.status = 'error'
+    console.error(e)
+  }
 }
 
-// const isUploading = computed(() => uploadedFiles.value.some((file) => file.status === 'loading'))
 const isHideUploadBtn = computed<boolean>(() => {
   if (typeof props.limit === 'number') {
     return uploadedFiles.value.length >= props.limit
@@ -194,10 +247,10 @@ const handleDrop = (e: DragEvent) => {
   if (!e.dataTransfer) return
 
   const files = e.dataTransfer.files
-  uploadFiles(files)
+  addToFilesList(files)
 }
 
-// 拖拽上传
+// 绑定上传事件
 let triggerEvent: TriggerEvent = {
   click: handleClick,
 }
@@ -210,6 +263,10 @@ if (props.drop) {
     drop: handleDrop,
   }
 }
+
+defineExpose({
+  handleUploadFiles,
+})
 </script>
 
 <style lang="less" scoped>
@@ -251,6 +308,7 @@ if (props.drop) {
 .upload-input {
   display: none;
 }
+
 .upload-btn {
   padding: 4px 15px;
   text-align: center;
