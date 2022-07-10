@@ -12,7 +12,7 @@ const useComponentCommon = (props: Readonly<ExtractPropTypes<TextComponentProps>
   }
   return {
     styleProps,
-    handleClick
+    handleClick,
   }
 }
 

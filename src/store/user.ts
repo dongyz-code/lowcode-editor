@@ -8,6 +8,6 @@ export interface UserProps {
 export const useUserProps = defineStore('userProps', {
   state: (): UserProps => ({
     isLogin: false,
-    userName: ''
-  })
+    userName: '',
+  }),
 })

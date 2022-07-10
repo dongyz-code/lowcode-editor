@@ -15,5 +15,5 @@ export const useTemplateProps = defineStore('TemplateProps', {
     coverImg: '',
     author: '',
     copiedCount: null,
-  })
+  }),
 })
