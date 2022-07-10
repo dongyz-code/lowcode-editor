@@ -26,4 +26,9 @@ export const fileToBase64 = (file: File) => {
   })
 }
 
+/**
+ * 获取数据类型
+ * @param val any
+ * @returns type
+ */
 export const getType = (val: any) => Object.prototype.toString.call(val).slice(8, -1).toLocaleLowerCase()
