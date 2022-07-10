@@ -12,6 +12,7 @@
           :componentId="component.id"
           :isActive="component.id === editorProps.activeComponent?.id"
           @setActive="setActive"
+          @delComponent="delComponent"
         >
           <component :is="componentsMap[component.name] || 'div'" v-bind="component.props" />
         </EditWrapper>
@@ -19,7 +20,7 @@
     </div>
     <div class="component-props-wrapper">
       <h2 class="props-title">组件属性</h2>
-      <PropsTable :props="editorProps.activeComponent?.props" />
+      <PropsTable :props="editorProps.activeComponent?.props" @change="changeProps" />
     </div>
   </div>
 </template>
@@ -57,6 +58,14 @@ const addComponentToCanvas = (component: TextComponentProps) => {
 
 const setActive = (id: string) => {
   editorProps.setActive(id)
+}
+
+const changeProps = (e: any) => {
+  editorProps.updateProps(e)
+}
+
+const delComponent = (id: string) => {
+  editorProps.delComponent(id)
 }
 </script>
 

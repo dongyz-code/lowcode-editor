@@ -1,14 +1,27 @@
+const path = require('path')
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   devServer: {
     host: '0.0.0.0',
     port: '8080',
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '',
+        },
+      },
+    },
   },
+
   transpileDependencies: true,
   configureWebpack: {},
+
   chainWebpack: (config) => {
-    config.resolve.extensions.clear().merge(['.ts', '.js', '.json', '.vue'])
+    config.resolve.extensions.clear().merge(['.ts', '.js', '.json', '.vue', '.tsx'])
   },
+
   css: {
     loaderOptions: {
       less: {
@@ -16,6 +29,13 @@ module.exports = defineConfig({
           javascriptEnabled: true,
         },
       },
+    },
+  },
+
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'less',
+      patterns: [path.resolve(__dirname, './src/styles/var.less')],
     },
   },
 })

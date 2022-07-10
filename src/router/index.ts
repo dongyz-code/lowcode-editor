@@ -6,6 +6,10 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/editor',
   },
   {
+    path: '/home',
+    component: () => import('@/views/Home/index.vue'),
+  },
+  {
     path: '/editor',
     component: () => import('@/views/Editor/index.vue'),
   },

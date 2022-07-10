@@ -11,6 +11,11 @@ export interface EditorProps {
   currentElement: string
 }
 
+type updateComponentProps = {
+  key: keyof TextComponentProps
+  value: string
+}
+
 /** 测试数据--start */
 export const testComponentData: ComponentData[] = [
   {
@@ -19,8 +24,9 @@ export const testComponentData: ComponentData[] = [
     props: {
       text: 'hello',
       fontSize: '14px',
-      lineHeight: '14px',
-      color: 'red',
+      lineHeight: '2',
+      color: '#f5222d',
+      opacity: '0.5',
     },
   },
   {
@@ -56,8 +62,19 @@ export const useEditorProps = defineStore('EditorProps', {
       this.$state.components.push(component)
     },
 
+    delComponent(componentId: string) {
+      this.$state.components = this.$state.components.filter((component) => component.id !== componentId)
+      if (componentId === this.currentElement) this.currentElement = ''
+    },
+
     setActive(id: string) {
       this.$state.currentElement = id
+    },
+
+    updateProps({ key, value }: updateComponentProps) {
+      const activeComponent = this.$state.components.find((component) => component.id === this.$state.currentElement)
+      if (!activeComponent) return
+      activeComponent.props[key] = value
     },
   },
 })
