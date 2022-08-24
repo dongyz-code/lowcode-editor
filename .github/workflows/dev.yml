@@ -1,12 +1,6 @@
 name: deploy-dev
 on:
   push:
-    branches:
-      - master
-    paths:
-        - '.github/workflows/**'
-        - '__test__/**'
-        - 'src/**'
   pull_request:
     branches:
       - master
