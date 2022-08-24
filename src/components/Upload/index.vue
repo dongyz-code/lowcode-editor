@@ -13,7 +13,7 @@
       </template>
 
       <!-- 上传按钮 -->
-      <div v-if="!isHideUploadBtn" v-on="triggerEvent" class="upload-btn-wrap">
+      <div v-if="!isHideUploadBtn" v-on="triggerEvent" :class="{ 'upload-btn-wrap': true, isDragOver }">
         <slot>
           <button class="upload-btn">
             <span class="upload-text">点击上传</span>
@@ -303,6 +303,10 @@ defineExpose({
     margin-right: 10px;
     margin-bottom: 10px;
     cursor: pointer;
+
+    &.isDragOver {
+      border: 1px solid @primary-color;
+    }
   }
 }
 .upload-input {
