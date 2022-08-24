@@ -1,0 +1,32 @@
+name: deploy-dev
+on:
+  push:
+    branches:
+      - master
+    paths:
+        - '.github/workflows/**'
+        - '__test__/**'
+        - 'src/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/**'
+      - '__test__/**'
+      - 'src/**'
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # git pull
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - name: test
+        run: |
+          touch a.txt
+          echo 100 > a.txt
+          cat a.txt
+          rm a.txt
