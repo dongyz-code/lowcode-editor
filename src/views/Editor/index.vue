@@ -89,6 +89,7 @@ const delComponent = (id: string) => {
     font-weight: 600;
     text-align: center;
   }
+
   .canvas-content {
     position: relative;
     margin: 10px auto;
