@@ -28,7 +28,7 @@ jobs:
           # 指定当前目录中要上传的内容
           SOURCE: "dist/"
           # 指定上传到部署机器的哪个目录下
-          TARGET: "/data/www"
+          TARGET: "/www"
           # 上传前指令，此处用于清空TARGET下的文件
           ARGS: "-avzr --delete"
           # REMOTE_HOST为机器的公网IP
