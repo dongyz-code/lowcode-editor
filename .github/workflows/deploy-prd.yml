@@ -1,6 +1,6 @@
 name: deploy-production
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths:
